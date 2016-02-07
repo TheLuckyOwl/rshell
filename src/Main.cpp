@@ -1,9 +1,11 @@
 #include <iostream>
-#include "Parse.cpp"
-
+//#include "Parse.h"
+#include "RShell.h"
 using namespace std;
 
 int main(){
+	RShell rshell;
+	rshell.inputLoop();
 	cout << "testing." << endl;
 
 	return 0;
