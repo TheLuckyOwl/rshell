@@ -1,0 +1,6 @@
+COMPILE = g++
+CPPFLAGS = -std=c++11
+WFLAGS = -Wall - Werror -ansi -pedantic
+
+all: rshell
+	g++ $(CPPFLAGS) (WFLAGS) Parse.cpp -o assignment2
