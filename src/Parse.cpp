@@ -1,5 +1,6 @@
-#include <iostream>
+/*#include <iostream>
 #include <sstream>
+#include "Parse.h"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ class Parse
 			{
 				string work;
 				parseData[i] = work;
-				if(work != '&&' && work != '||')
+				if(work != "&&" && work != "||")
 				{
 					if(work.back() == ';')
 					{
@@ -68,4 +69,4 @@ class Parse
 			}
 			
 		}
-}
+}*/
