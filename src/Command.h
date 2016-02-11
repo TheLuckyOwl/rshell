@@ -1,7 +1,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "RShell.h"
 #include <string>
 
 using namespace std;
@@ -10,9 +9,9 @@ class Command {
   private:
     string commandString;
 	string argumentString;
-    //RShell* rshell;
+
+	int forkFunction(char** commandArray);
   public:
-    //void callCommand(string givenCommand, string givenArgument); 
-    //void setRShell(RShell* givenRShell);
+    int callCommand(string givenCommand, string givenArgument); 
 };
 #endif
