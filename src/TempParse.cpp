@@ -29,10 +29,16 @@ void  Parse::stringSplitter(string commandLine){
       if (commandLine[i] == ';'){
         parseData.push_back(";");
       }
-      if (commandLine[i] == '&'&&i != 0){
-        if (commandLine[i - 1] == '&'){
+      else if (commandLine[i] == '&'&&i != 0)
+	  {
+        if (commandLine[i - 1] == '&')
+		{
           parseData.push_back("&&");
-        }
+        }else
+		{
+		  //TODO NEED TO PUT ERROR CONTROL HERE AND IN OTHER FUNCTIONS
+		}
+	
       }
       if (commandLine[i] == '|'&&i != 0){
         if (commandLine[i - 1] == '|'){
