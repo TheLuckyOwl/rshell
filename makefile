@@ -7,4 +7,4 @@ SOURCEDIR = src/
 all: rshell
 
 rshell:
-	g++ $(WFLAGS) ./src/Main.cpp ./src/TempParse.cpp ./src/Expansion.cpp ./src/Analyze.cpp ./src/Command.cpp ./src/RShell.cpp -o assignment2
+	g++ $(WFLAGS) ./src/Main.cpp ./src/Parse.cpp ./src/Expansion.cpp ./src/Analyze.cpp ./src/Command.cpp ./src/RShell.cpp -o rshell
