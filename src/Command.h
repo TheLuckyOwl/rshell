@@ -2,6 +2,7 @@
 #define COMMAND_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -12,6 +13,6 @@ class Command {
 
 	int forkFunction(char** commandArray);
   public:
-    int callCommand(string givenCommand, string givenArgument); 
+    int callCommand(vector<string> givenVector); 
 };
 #endif

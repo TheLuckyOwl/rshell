@@ -17,14 +17,14 @@
 //
 using namespace std;
 
-int Command::callCommand(string givenCommand, string givenArgument){
+int Command::callCommand(vector<string> givenVector){
   char** commandArray;
-  string tempString;
-  int result=1;
+ // string tempString;
+  int result=0;
   
-  vector<string> commandVector;
+ // vector<string> commandVector;
 
-  if(givenCommand != ""){
+ /* if(givenCommand != ""){
     
 	for (unsigned int i = 0; i < givenArgument.size(); i++){
       unsigned int currentPos = i;
@@ -37,25 +37,20 @@ int Command::callCommand(string givenCommand, string givenArgument){
         tempString = givenArgument.substr(currentPos, i - currentPos);
         commandVector.push_back(tempString);
       }
-    }
+    }*/
 
 
-	commandArray = new char* [commandVector.size()+2];
-
-
-    commandArray[0] = (char*)givenCommand.c_str();
+	commandArray = new char* [givenVector.size() + 1];
   
-	for(unsigned int j=1; j < commandVector.size()+1; j++){
-	  commandArray[j] = (char*)(commandVector[j-1].c_str());
+	for(unsigned int j = 0; j < givenVector.size(); j++){
+	  commandArray[j] = (char*)(givenVector[j].c_str());
 	}
 
-	commandArray[commandVector.size()+1] = NULL;
+	commandArray[givenVector.size()] = NULL;
 
 	result = forkFunction(commandArray);
 
 	delete[] commandArray;
-
-  }
 
   return result;
   //Call forkFunction(), we will pass the finished commandArray to this function.
@@ -78,8 +73,6 @@ int Command::forkFunction(char** commandArray){
 	return EX_OSERR;
   }
 
-
-
   if (currentPID < 0){  //PID < 0, means that something went wrong creating a child process.
     perror("Error creating child with fork!");
 	exit(-1);
@@ -94,11 +87,11 @@ int Command::forkFunction(char** commandArray){
 	}
 
 	if (count) {
-	  fprintf(stderr, "child's execvp: %s\n", strerror(error));  //REMOVE
+	  //fprintf(stderr, "child's execvp: %s\n", strerror(error));  //REMOVE
 	  return EX_UNAVAILABLE;
 	}
     close(pipefd[0]);
-	puts("waiting for child..."); //REMOVE
+	//puts("waiting for child..."); //REMOVE
 
 	waitpid(currentPID, &error, 0);
 	if (error < 0){
@@ -106,10 +99,10 @@ int Command::forkFunction(char** commandArray){
 	  exit(-1);
 	}
 
-    if (WIFEXITED(error))
-	  printf("child exited with %d\n", WEXITSTATUS(error));
-	else if (WIFSIGNALED(error))
-	  printf("child killed by %d\n", WTERMSIG(error));
+    //if (WIFEXITED(error))
+	 // printf("child exited with %d\n", WEXITSTATUS(error));
+	//else if (WIFSIGNALED(error))
+	 // printf("child killed by %d\n", WTERMSIG(error));
 
   } else {  //PID == 0, which means we are in the child process.
     close(pipefd[0]);

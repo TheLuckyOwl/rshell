@@ -13,7 +13,7 @@ class Parse {
     vector<string> parseData;
     Expansion expander;
   public:
-    void stringSplitter(string commandLine);		
+    void stringSplitter(string commandLine, int* exitFlag);		
 };
 
 #endif

@@ -8,7 +8,6 @@ int main(){
 	//the command line to run.
 	RShell rshell;
 	rshell.inputLoop();
-	cout << "testing." << endl;
 
 	return 0;
 }

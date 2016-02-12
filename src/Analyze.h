@@ -3,15 +3,15 @@
 
 #include <vector>
 #include <string>
-//#include "Command.h"
+#include "Command.h"
 
 using namespace std;
 
 class Analyze {
   private:
     vector<string>* parseData;
-	//Command commander;
+	Command commander;
   public:
-    void analyzeString(vector<string>* givenData);	//I don't think we need a parseData internal variable?
+    void analyzeString(vector<string>* givenData, int* exitFlag);	//I don't think we need a parseData internal variable?
 };
 #endif

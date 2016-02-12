@@ -12,6 +12,6 @@ class Expansion {
     vector<string>* parseData;
     Analyze analyzer;
   public:
-    void expand(vector<string>* givenData);	
+    void expand(vector<string>* givenData, int* exitFlag);	
 };
 #endif

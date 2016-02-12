@@ -48,7 +48,7 @@ void RShell::outputString(string givenString){
  * and the connectors. This way they can be used to exectue.
  */
 void RShell::parseString(){
-  parser.stringSplitter(commandLine);
+  parser.stringSplitter(commandLine, &exitStatus);
 }
 
 void RShell::setExit(){

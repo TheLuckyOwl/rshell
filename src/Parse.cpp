@@ -3,13 +3,18 @@
 
 using namespace std;
 
-void  Parse::stringSplitter(string commandLine){
+void  Parse::stringSplitter(string commandLine, int* exitFlag){
   string tempString;
   string connectorString;
   parseData.clear();
   for (unsigned int i = 0; i < commandLine.size(); i++){
     unsigned int currentPos = i;
-    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&i < commandLine.size()){
+    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&i < commandLine.size()){
+      
+     // if ( commandLine[i] = '"' ){
+	  //cut out the "  
+	 // }
+
       i++;
     }
 	/*The following if statements check for exectution commands at tghe end of words.
@@ -24,27 +29,32 @@ void  Parse::stringSplitter(string commandLine){
       if (commandLine[i] == ';'){
         parseData.push_back(";");
       }
+	  if(commandLine[i] == '#'){
+	    break;
+	  }
+
     }else {
 
-      if (commandLine[i] == ';'){
+      if (commandLine[i] == ';') {
         parseData.push_back(";");
       }
-      else if (commandLine[i] == '&'&&i != 0)
-	  {
-        if (commandLine[i - 1] == '&')
-		{
+	  
+      if (commandLine[i] == '#') {
+	    break;
+	  }
+
+      if (commandLine[i] == '&'&&i != 0) {
+        if (commandLine[i - 1] == '&'){
           parseData.push_back("&&");
-        }else
-		{
-		  //TODO NEED TO PUT ERROR CONTROL HERE AND IN OTHER FUNCTIONS
-		}
-	
+        }
       }
+
       if (commandLine[i] == '|'&&i != 0){
         if (commandLine[i - 1] == '|'){
           parseData.push_back("||");
         }
       }
+
     }
   }
 	
@@ -52,6 +62,7 @@ void  Parse::stringSplitter(string commandLine){
   for (unsigned int i = 0; i < parseData.size(); i++){
     cout << parseData[i] << endl;
   }
-
-  expander.expand(&parseData);  //Pass Data to Expansion object expander.
+//Down here check if the parsed string is good, if its not print an appropriate error.
+//
+  expander.expand(&parseData, exitFlag);  //Pass Data to Expansion object expander.
 }
