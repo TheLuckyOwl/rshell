@@ -12,33 +12,12 @@
 #include <sysexits.h>
 #include <cstring>
 
-//Note: need to implement self-pipe trick to return whether execvp executed properly. less than 0 = failed.
-//higher than 0 = succeeded.
-//
+//If 0 succeeded else failed.
 using namespace std;
 
 int Command::callCommand(vector<string> givenVector){
   char** commandArray;
- // string tempString;
   int result=0;
-  
- // vector<string> commandVector;
-
- /* if(givenCommand != ""){
-    
-	for (unsigned int i = 0; i < givenArgument.size(); i++){
-      unsigned int currentPos = i;
-
-      while (givenArgument[i] != ' '){
-        i++;
-      }  
-
-      if (i != currentPos){
-        tempString = givenArgument.substr(currentPos, i - currentPos);
-        commandVector.push_back(tempString);
-      }
-    }*/
-
 
 	commandArray = new char* [givenVector.size() + 1];
   
@@ -87,22 +66,15 @@ int Command::forkFunction(char** commandArray){
 	}
 
 	if (count) {
-	  //fprintf(stderr, "child's execvp: %s\n", strerror(error));  //REMOVE
 	  return EX_UNAVAILABLE;
 	}
     close(pipefd[0]);
-	//puts("waiting for child..."); //REMOVE
 
 	waitpid(currentPID, &error, 0);
 	if (error < 0){
 	  perror("Error in waitpid!");
 	  exit(-1);
 	}
-
-    //if (WIFEXITED(error))
-	 // printf("child exited with %d\n", WEXITSTATUS(error));
-	//else if (WIFSIGNALED(error))
-	 // printf("child killed by %d\n", WTERMSIG(error));
 
   } else {  //PID == 0, which means we are in the child process.
     close(pipefd[0]);

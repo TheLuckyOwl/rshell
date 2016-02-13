@@ -1,10 +1,13 @@
 COMPILE = g++
-CPPFLAGS = -std=c++11
 WFLAGS = -Wall -Werror -ansi -pedantic
+SHELL := /bin/bash
 
-SOURCEDIR = src/
+SOURCEDIR = ./src/
+BINDIR = ./bin/
+
 
 all: rshell
 
 rshell:
-	g++ $(WFLAGS) ./src/Main.cpp ./src/Parse.cpp ./src/Expansion.cpp ./src/Analyze.cpp ./src/Command.cpp ./src/RShell.cpp -o rshell
+	mkdir -p $(BINDIR)
+	g++ $(WFLAGS) $(SOURCEDIR)Main.cpp $(SOURCEDIR)Parse.cpp $(SOURCEDIR)Expansion.cpp $(SOURCEDIR)Analyze.cpp $(SOURCEDIR)Command.cpp $(SOURCEDIR)RShell.cpp -o $(BINDIR)rshell
