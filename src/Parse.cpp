@@ -299,6 +299,9 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
   string connectorString;
   parseData.clear();
 
+  commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\t'), commandLine.end());
+  commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\n'), commandLine.end());
+
   if ( errorCheckCharacters( &commandLine ) ){
     return;
   }
@@ -307,23 +310,34 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
     unsigned int currentPos = i;
     while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&i < commandLine.size()){
       
-    /* if ( commandLine[i] == '"' ){
-   //if you are able to find another " cut out the first " and second ", if you can't output an error. 
-      for(unsigned int k=0; k < commandLine.size();k++){
-        if( commandLine[k] == '"' ){
-          tempString = commandLine.substr(i + 1, k - i - 1);
-      cout << tempString << endl;
-          parseData.push_back(tempString);
-      currentPos = k + 1;
-      i = k + 1;
+      if ( commandLine[i] == '"'){
+        //if you are able to find another " cut out the first " and second ", if you can't output an error. 
+        for(unsigned int k=i+1; k < commandLine.size();k++){
+          if( commandLine[k] == '"' ){
+            tempString = commandLine.substr(i + 1, k - i - 1);
+            parseData.push_back(tempString);
+            currentPos = k + 1;
+            i = k;
+          }
         }
       }
-    }
-    */
+    
+      if ( commandLine[i] == '\''){
+        //if you are able to find another ' cut out the first ' and second ', if you can't output an error. 
+        for(unsigned int k=i+1; k < commandLine.size();k++){
+          if( commandLine[k] == '\'' ){
+            tempString = commandLine.substr(i + 1, k - i - 1);
+            parseData.push_back(tempString);
+            currentPos = k + 1;
+            i = k;
+          }
+        }
+      }
+
       i++;
     }
   /*The following if statements check for exectution commands at the end of words.
-   *If an exectution command is detected at the end of a word such as : ";" "&" "|"
+   *If an execution command is detected at the end of a word such as : ";" "&" "|"
    *it will check the next to last character, if they match then they will be added
    *to the parseData vector.
    */
