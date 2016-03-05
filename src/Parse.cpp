@@ -308,9 +308,11 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 
   for (unsigned int i = 0; i < commandLine.size(); i++){
     unsigned int currentPos = i;
-    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&i < commandLine.size()){
+    unsigned int outer = i;
+    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&commandLine[i] != '('&&commandLine[i] != ')'&&commandLine[i] != '['&&commandLine[i] != ']'&&i < commandLine.size()){
       
-      if ( commandLine[i] == '"'){
+      //OLD QUOTATION CLIPPING METHOD
+      /*if ( commandLine[i] == '"'){
         //if you are able to find another " cut out the first " and second ", if you can't output an error. 
         for(unsigned int k=i+1; k < commandLine.size();k++){
           if( commandLine[k] == '"' ){
@@ -318,6 +320,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
             parseData.push_back(tempString);
             currentPos = k + 1;
             i = k;
+            k = commandLine.size();
           }
         }
       }
@@ -330,9 +333,56 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
             parseData.push_back(tempString);
             currentPos = k + 1;
             i = k;
+            k = commandLine.size();
           }
         }
+      }*/
+
+      //NEW CLIPPING METHOD
+      outer = i;
+      if ( commandLine[i] == '"'){
+        for ( unsigned int k=i+1; k < commandLine.size(); k++){
+          if( commandLine[k] == '"'){
+            outer = k;
+          }
+
+          if( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ){
+            k = commandLine.size();
+          }
+        }
+
+        if (outer != i){
+          tempString = commandLine.substr(i + 1, outer - i - 1);
+          tempString.erase(remove(tempString.begin(), tempString.end(), '"'), tempString.end());
+          parseData.push_back(tempString);
+          i = outer;
+          currentPos = outer + 1;
+        }
       }
+
+      outer = i;
+      if ( commandLine[i] == '\''){
+        for ( unsigned int k=i+1; k < commandLine.size(); k++){
+          if( commandLine[k] == '\''){
+            outer = k;
+          }
+
+          if( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ){
+            k = commandLine.size();
+          }
+        }
+
+        if (outer != i){
+          tempString = commandLine.substr(i + 1, outer - i - 1);
+          tempString.erase(remove(tempString.begin(), tempString.end(), '\''), tempString.end());
+          parseData.push_back(tempString);
+          i = outer;
+          currentPos = outer + 1;
+        }
+      }
+
+
+
 
       i++;
     }
@@ -348,9 +398,26 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       if (commandLine[i] == ';'){
         parseData.push_back(";");
       }
-    if(commandLine[i] == '#'){
-      break;
-    }
+
+      if(commandLine[i] == '#'){
+        break;
+      }
+
+      if (commandLine[i] == '('){
+        parseData.push_back("(");
+      }
+
+      if (commandLine[i] == ')'){
+        parseData.push_back(")");
+      }
+
+      if (commandLine[i] == '['){
+        parseData.push_back("[");
+      }
+
+      if (commandLine[i] == ']'){
+        parseData.push_back("]");
+      }
 
     }else {
 
@@ -359,8 +426,24 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       }
     
       if (commandLine[i] == '#') {
-      break;
-    }
+        break;
+      }
+
+      if (commandLine[i] == '('){
+        parseData.push_back("(");
+      }
+
+      if (commandLine[i] == ')'){
+        parseData.push_back(")");
+      }
+
+      if (commandLine[i] == '['){
+        parseData.push_back("[");
+      }
+
+      if (commandLine[i] == ']'){
+        parseData.push_back("]");
+      }
 
       if (commandLine[i] == '&'&&i != 0) {
         if (commandLine[i - 1] == '&'){
@@ -384,6 +467,13 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
   if ( errorCheckConnectors(parseData) ){
     return;
   }
+
+//Use this loop to print out the parseData to see everything is being broken up
+//correctly.
+
+//  for (unsigned int erw = 0; erw < parseData.size(); erw++){
+//    cout << parseData[erw] << endl;
+//  }
 
   expander.expand(&parseData, exitFlag);  //Pass Data to Expansion object expander.
 }
