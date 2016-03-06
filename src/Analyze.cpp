@@ -1,5 +1,9 @@
 #include "Analyze.h"
 #include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -123,10 +127,69 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
 	  //execute the command and reset the commandVector, take the value from and decide what to do next based 
 	  //on the connector
 
-      if (commandVector[0] == "exit"){
+      if ( commandVector[0] == "exit" ) {
         *exitFlag = 1;
         break;
       }
+
+      if ( commandVector[0] == "test" ) {
+        if ( commandVector.size() != 3 ) {
+          cout << "Error: Incorrect number of arguments for test command." << endl;
+          break;
+        }else{
+          struct stat statObj;
+          int statResult = stat(commandVector[2].c_str(), &statObj);
+          if ( commandVector[1] == "-e" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -e flag."); 
+              exit(EXIT_FAILURE);
+            }else{
+              cout << "(True)" << endl;
+              result = 0;
+            }      
+          } else if ( commandVector[1] == "-f" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -f flag.");
+              exit(EXIT_FAILURE);
+            }else{
+              if(S_ISREG(statObj.st_mode)){
+                cout << "(True)" << endl;
+                result = 0;
+              }else{
+                cout << "(False)" << endl;
+                result = 1;
+              }
+            } 
+          } else if ( commandVector[1] == "-d" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -d flag.");
+              exit(EXIT_FAILURE);
+            }else{
+              if(S_ISDIR(statObj.st_mode)){
+                cout << "(True)" << endl;
+                result = 0;
+              }else{
+                cout << "(False)" << endl;
+                result = 1;
+              }
+            }
+          } else {
+            cout << "Error: unreadable flags for test command." << endl;
+            break;
+          }
+        }
+        commandVector.clear();
+      }
+
       if(commandVector.size() != 0){
         //cout << "executed command: " << commandVector[0] << endl;
         result = commander.callCommand(commandVector);}
@@ -168,9 +231,63 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
         *exitFlag = 1;
     }
 
-    //if (commandVector[0] == "test"){}
+    if (commandVector[0] == "test"){
+       if ( commandVector.size() != 3 ) {
+          cout << "Error: Incorrect number of arguments for test command." << endl;
+        }else{
+          struct stat statObj;
+          int statResult = stat(commandVector[2].c_str(), &statObj);
+          if ( commandVector[1] == "-e" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -e flag."); 
+              exit(EXIT_FAILURE);
+            }else{
+              cout << "(True)" << endl;
+              result = 0;
+            }      
+          } else if ( commandVector[1] == "-f" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -f flag.");
+              exit(EXIT_FAILURE);
+            }else{
+              if(S_ISREG(statObj.st_mode)){
+                cout << "(True)" << endl;
+                result = 0;
+              }else{
+                cout << "(False)" << endl;
+                result = 1;
+              }
+            } 
+          } else if ( commandVector[1] == "-d" ) {
+            if(statResult){
+              cout << "(False)" << endl;
+              result = 1;
+            }else if(statResult == -1){
+              perror("stat error with -d flag.");
+              exit(EXIT_FAILURE);
+            }else{
+              if(S_ISDIR(statObj.st_mode)){
+                cout << "(True)" << endl;
+                result = 0;
+              }else{
+                cout << "(False)" << endl;
+                result = 1;
+              }
+            }
+          } else {
+            cout << "Error: unreadable flags for test command." << endl;
+          }
+        }
+ 
+    }
 
-    if(commandVector[0] != "exit"){
+    if(commandVector[0] != "exit"&&commandVector[0] != "test"){
       result = commander.callCommand(commandVector);
     }
 
