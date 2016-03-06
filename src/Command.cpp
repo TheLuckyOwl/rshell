@@ -76,6 +76,10 @@ int Command::forkFunction(char** commandArray){
 	  exit(-1);
 	}
 
+  if(WIFEXITED(error)){}else{
+    error = 2;
+  }
+
   } else {  //PID == 0, which means we are in the child process.
     close(pipefd[0]);
 	int execvpStatus = execvp(commandArray[0], commandArray);

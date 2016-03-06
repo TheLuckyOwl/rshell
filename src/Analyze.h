@@ -12,6 +12,6 @@ class Analyze {
     vector<string>* parseData;
 	Command commander;
   public:
-    void analyzeString(vector<string>* givenData, int* exitFlag);	//I don't think we need a parseData internal variable?
+    int analyzeString(vector<string>* givenData, int* exitFlag);	//I don't think we need a parseData internal variable?
 };
 #endif
