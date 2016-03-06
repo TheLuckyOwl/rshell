@@ -300,6 +300,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
   parseData.clear();
   unsigned int writingWords = 0;
   unsigned int afterParantheses = 0;
+  unsigned int beforeParantheses = 0;
 
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\t'), commandLine.end());
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\n'), commandLine.end());
@@ -397,13 +398,23 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       writingWords = 1;
       tempString = commandLine.substr(currentPos, i - currentPos);
       parseData.push_back(tempString);
+      
+      if(writingWords&&beforeParantheses){      //BEFORE
+        cout << "Error: Unexpected token before Parantheses." << endl;
+        return;
+      }
 
       if(writingWords&&afterParantheses){
         cout << "Error: Unexpected token after Parantheses." << endl;
         return;
       }
 
+      if(beforeParantheses){    //BEFORE
+        beforeParantheses = 0;
+      }
+
       if (commandLine[i] == ';'){
+        writingWords = 0;
         afterParantheses = 0;
         parseData.push_back(";");
       }
@@ -414,10 +425,12 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       }
 
       if (commandLine[i] == '('){
+        beforeParantheses = writingWords;            //BEFORE
         parseData.push_back("(");
       }
 
       if (commandLine[i] == ')'){
+        beforeParantheses = 0;
         afterParantheses = 1;
         parseData.push_back(")");
       }
@@ -434,6 +447,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 
       if (commandLine[i] == ';') {
         afterParantheses = 0;
+        writingWords = 0;
         parseData.push_back(";");
       }
     
@@ -442,10 +456,12 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       }
 
       if (commandLine[i] == '('){
+        beforeParantheses = writingWords;   //BEFORE
         parseData.push_back("(");
       }
 
       if (commandLine[i] == ')'){
+        afterParantheses = 1; //ADDED
         parseData.push_back(")");
       }
 
@@ -459,6 +475,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 
       if (commandLine[i] == '&'&&i != 0) {
         if (commandLine[i - 1] == '&'){
+          writingWords = 0;
           afterParantheses = 0;
           parseData.push_back("&&");
         }
@@ -466,6 +483,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 
       if (commandLine[i] == '|'&&i != 0){
         if (commandLine[i - 1] == '|'){
+          writingWords = 0;
           afterParantheses = 0;
           parseData.push_back("||");
         }

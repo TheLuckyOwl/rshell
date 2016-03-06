@@ -18,8 +18,9 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
   unsigned int insideQuotes = 0;
   unsigned int finishedParantheses = 0;
 
-  for (unsigned int i = 0;i < givenString->size();i++){
+  vector<int> resultVector;
 
+  for (unsigned int i = 0;i < givenString->size();i++){
     if(skipAndFlag){    //MODIFY THESE SKIP LOOPS SO THEY WILL SKIP OVER && OR || OR ; IF ITS IN ()
       skipAndFlag = 0;
       insideQuotes = 0;
@@ -33,6 +34,12 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
           insideQuotes = 0;
         }
         i++;
+      }
+      if(givenString->at(i)=="||"){
+        resultVector.push_back(-2);
+      }
+      if(givenString->at(i)==";"){
+        resultVector.push_back(-3);
       }
 
     }else if(skipOrFlag){
@@ -48,6 +55,12 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
           insideQuotes = 0;
         }
         i++;
+      }
+      if(givenString->at(i)=="&&"){
+        resultVector.push_back(-1);
+      }
+      if(givenString->at(i)==";"){
+        resultVector.push_back(-3);
       }
 
     }else if ( (givenString->at(i)!="&&")&&(givenString->at(i)!="||")&&(givenString->at(i)!=";") ) {
@@ -92,12 +105,19 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
           finishedParantheses = 1;
           i = outer;
           result = analyzeString(&commandVector, exitFlag);
+          resultVector.push_back(result);                   //RESULTVECTOR
           
           commandVector.clear();
 
-          if (result == 2||result == 4){
+          if (result == 4){
             return result;
           }
+
+          if(result == 2){
+            cout << "Error: Invalid Call to Command " << commandVector[0] << "." << endl;  
+            result = 1;
+          } 
+        
 
         }
       
@@ -132,14 +152,25 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
         break;
       }
 
-      if ( commandVector[0] == "test" ) {
-        if ( commandVector.size() != 3 ) {
+      if ( commandVector[0] == "test" && commandVector.size() > 0 ) {
+          //cout << "Entered Top" << endl;
+          //cout << "Size of commandVector: " << commandVector.size() << "." << endl;
+        if ( commandVector.size() != 3 && commandVector.size() != 2 ) {
           cout << "Error: Incorrect number of arguments for test command." << endl;
+          commandVector.clear();
           break;
         }else{
           struct stat statObj;
-          int statResult = stat(commandVector[2].c_str(), &statObj);
-          if ( commandVector[1] == "-e" ) {
+          int defaultFlag = 0;
+          int statResult = 0;
+          if( commandVector.size() == 2 ){
+            defaultFlag = 1;
+            statResult = stat(commandVector[1].c_str(), &statObj);
+          }else{
+            statResult = stat(commandVector[2].c_str(), &statObj);
+          }
+          if ( commandVector[1] == "-e" || defaultFlag) {
+ 
             if(statResult){
               cout << "(False)" << endl;
               result = 1;
@@ -184,24 +215,32 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
             }
           } else {
             cout << "Error: unreadable flags for test command." << endl;
+            commandVector.clear();
             break;
           }
+          //cout << "Reached Here" << endl;
+          resultVector.push_back(result);                             //RESULTVECTOR
+          //dontRun = 1;
         }
         commandVector.clear();
       }
-
+      
+      //cout << "dontRun: " << dontRun << endl;
       if(commandVector.size() != 0){
         //cout << "executed command: " << commandVector[0] << endl;
-        result = commander.callCommand(commandVector);}
-
+        result = commander.callCommand(commandVector);
+        //cout << "RAN" << endl;
+        resultVector.push_back(result);
+      }
       if(result == 2){
         cout << "Error: Invalid Call to Command " << commandVector[0] << "." << endl;  
-        return result;
+        result = 1;
       } 
 
       //cout << "result flag before && and || check: " << result << "." << endl;
 
       if (givenString->at(i)=="&&"){
+        resultVector.push_back(-1);
         finishedParantheses = 0;
         if (result!=0){
           skipAndFlag = 1;
@@ -212,6 +251,7 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
       }
       
       if (givenString->at(i)=="||"){
+        resultVector.push_back(-2);
         finishedParantheses = 0;
         if (result==0){
           skipOrFlag = 1;
@@ -219,6 +259,12 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
         }else{
           finalResult = 1;
         }
+      }
+
+      if (givenString->at(i)==";"){
+        resultVector.push_back(-3);
+        finishedParantheses = 0;
+        
       }
       
         commandVector.clear();
@@ -231,13 +277,21 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
         *exitFlag = 1;
     }
 
-    if (commandVector[0] == "test"){
-       if ( commandVector.size() != 3 ) {
+    if (commandVector[0] == "test" && commandVector.size() > 0){
+      //cout << "Entered Bottom" << endl;
+       if ( commandVector.size() != 3 && commandVector.size() != 2 ) {
           cout << "Error: Incorrect number of arguments for test command." << endl;
         }else{
           struct stat statObj;
-          int statResult = stat(commandVector[2].c_str(), &statObj);
-          if ( commandVector[1] == "-e" ) {
+          int defaultFlag = 0;
+          int statResult = 0;
+          if( commandVector.size() == 2 ){
+            defaultFlag = 1;
+            statResult = stat(commandVector[1].c_str(), &statObj);
+          }else{
+            statResult = stat(commandVector[2].c_str(), &statObj);
+          }
+          if ( commandVector[1] == "-e" || defaultFlag) {
             if(statResult){
               cout << "(False)" << endl;
               result = 1;
@@ -282,21 +336,125 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
             }
           } else {
             cout << "Error: unreadable flags for test command." << endl;
+            commandVector.clear();
           }
+
+          resultVector.push_back(result);
         }
  
     }
 
     if(commandVector[0] != "exit"&&commandVector[0] != "test"){
       result = commander.callCommand(commandVector);
+      resultVector.push_back(result);
     }
 
     if(result == 2){
       cout << "Error: Invalid Call to Command " << commandVector[0] << "." << endl;
-      return result;
+      result = 1;
+      resultVector.push_back(result);
     }
   }
-  //cout << "Final Result: " << finalResult << "." << endl;
+  /*cout << "Result Vector: ";
+  for(unsigned int sizeResult = 0; sizeResult < resultVector.size(); sizeResult++){
+    cout << resultVector[sizeResult] << " ";
+
+    if(sizeResult < resultVector.size() -1 ){
+      if(resultVector[sizeResult]==-3){
+        resultVector[sizeResult+1] == 0;
+      }else if(resultVector[sizeResult] == -2){
+      
+      }else if(resultVector[sizeResult] == -1){
+      
+      }else if(resultVector[sizeResult] == 0){
+      
+      }else if(resultVector[sizeResult] >= 1){
+      
+      }
+
+    }else{
+      if(resultVector[sizeResult-1] == -1){
+        finalResult = resultVector[sizeResult];
+      }else if(resultVector[sizeResult-1] == -2){
+        finalResult = resultVector[sizeResult];
+      }else if(resultVector[sizeResult-1] == -3){
+        finalResult = 0;
+      
+      }
+    }
+  }
+  cout << endl;*/
+
+  if(resultVector.size()>=2){
+    if(resultVector[resultVector.size()-1] == -2){
+      if(resultVector[resultVector.size()-2]==-3){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==-2){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==-1){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==0){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]>=1){
+        finalResult = 0;
+      }
+    }else if(resultVector[resultVector.size()-1] == -1){
+      if(resultVector[resultVector.size()-2]==-3){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]==-2){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]==-1){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]==0){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]>=1){
+        finalResult = 1;
+      } 
+    }else if(resultVector[resultVector.size()-1] == 0){
+      if(resultVector[resultVector.size()-2]==-3){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==-2){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==-1){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==0){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]>=1){
+        finalResult = 1;
+      }
+    }else if(resultVector[resultVector.size()-1] >= 1){
+      if(resultVector[resultVector.size()-2]==-3){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]==-2){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]==-1){
+        finalResult = 1;
+      }
+      if(resultVector[resultVector.size()-2]==0){
+        finalResult = 0;
+      }
+      if(resultVector[resultVector.size()-2]>=1){
+        finalResult = 1;
+      }
+    }
+  }else if(resultVector.size()==1){
+    finalResult = resultVector[0];
+  }
+
   return finalResult;
 
 }
