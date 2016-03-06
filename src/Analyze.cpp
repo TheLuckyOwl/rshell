@@ -12,6 +12,7 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
   unsigned int outer = 0;
   unsigned int paranthesesCount = 0;
   unsigned int insideQuotes = 0;
+  unsigned int finishedParantheses = 0;
 
   for (unsigned int i = 0;i < givenString->size();i++){
 
@@ -48,6 +49,15 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
     }else if ( (givenString->at(i)!="&&")&&(givenString->at(i)!="||")&&(givenString->at(i)!=";") ) {
       outer = i;
       if(givenString->at(i) == "("){
+        if(commandVector.size()!= 0){
+          cout << "Error: Unexpected token ";
+          for (unsigned int unexp = 0; unexp < commandVector.size(); unexp++){
+            cout << commandVector[unexp] << " ";
+          }
+          cout << endl;
+
+          return 4;
+        }
         paranthesesCount = 0;
         for (unsigned int k=i+1; k < givenString->size(); k++){
           if( givenString->at(k)== ")" ){
@@ -75,20 +85,38 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
           cout << endl;*/
 
 
-
+          finishedParantheses = 1;
           i = outer;
           result = analyzeString(&commandVector, exitFlag);
           
           commandVector.clear();
 
-          if (result == 2){
+          if (result == 2||result == 4){
             return result;
           }
 
         }
       
       }else{
-        commandVector.push_back(givenString->at(i));
+        if(finishedParantheses){
+          cout << "Error: Unexpected token ";
+          while((givenString->at(i)!="&&")&&(givenString->at(i)!="||")&&(givenString->at(i)!=";")&&(i < givenString->size() - 1)){
+            commandVector.push_back(givenString->at(i));
+            i++;
+          }
+          if((givenString->at(i) != "&&")&&(givenString->at(i) != "||")&&(givenString->at(i)!=";")&&(i < givenString->size())){
+            commandVector.push_back(givenString->at(i));
+          }
+          for (unsigned int unexp = 0; unexp < commandVector.size(); unexp++){
+            cout << commandVector[unexp] << " ";
+          }
+          cout << endl;
+
+          return 4;
+
+        }else{
+          commandVector.push_back(givenString->at(i));
+        }
       }
 
     } else {
@@ -111,6 +139,7 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
       //cout << "result flag before && and || check: " << result << "." << endl;
 
       if (givenString->at(i)=="&&"){
+        finishedParantheses = 0;
         if (result!=0){
           skipAndFlag = 1;
           finalResult = 1;
@@ -120,6 +149,7 @@ int Analyze::analyzeString(vector<string>* givenString, int* exitFlag){
       }
       
       if (givenString->at(i)=="||"){
+        finishedParantheses = 0;
         if (result==0){
           skipOrFlag = 1;
           finalResult = 0;

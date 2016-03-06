@@ -298,6 +298,8 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
   string tempString;
   string connectorString;
   parseData.clear();
+  unsigned int writingWords = 0;
+  unsigned int afterParantheses = 0;
 
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\t'), commandLine.end());
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\n'), commandLine.end());
@@ -392,14 +394,22 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
    *to the parseData vector.
    */
     if (i != currentPos){
+      writingWords = 1;
       tempString = commandLine.substr(currentPos, i - currentPos);
       parseData.push_back(tempString);
 
+      if(writingWords&&afterParantheses){
+        cout << "Error: Unexpected token after Parantheses." << endl;
+        return;
+      }
+
       if (commandLine[i] == ';'){
+        afterParantheses = 0;
         parseData.push_back(";");
       }
 
       if(commandLine[i] == '#'){
+        afterParantheses = 0;
         break;
       }
 
@@ -408,6 +418,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       }
 
       if (commandLine[i] == ')'){
+        afterParantheses = 1;
         parseData.push_back(")");
       }
 
@@ -422,6 +433,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
     }else {
 
       if (commandLine[i] == ';') {
+        afterParantheses = 0;
         parseData.push_back(";");
       }
     
@@ -447,12 +459,14 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 
       if (commandLine[i] == '&'&&i != 0) {
         if (commandLine[i - 1] == '&'){
+          afterParantheses = 0;
           parseData.push_back("&&");
         }
       }
 
       if (commandLine[i] == '|'&&i != 0){
         if (commandLine[i - 1] == '|'){
+          afterParantheses = 0;
           parseData.push_back("||");
         }
       }
