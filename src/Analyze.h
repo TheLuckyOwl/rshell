@@ -7,11 +7,14 @@
 
 using namespace std;
 
+//Analyze class, will be used to analyze vector string of connectors, commands,
+//and operators.
+
 class Analyze {
   private:
     vector<string>* parseData;
-	Command commander;
+	  Command commander;
   public:
-    int analyzeString(vector<string>* givenData, int* exitFlag);	//I don't think we need a parseData internal variable?
+    int analyzeString( vector<string>* givenData, int* exitFlag );
 };
 #endif

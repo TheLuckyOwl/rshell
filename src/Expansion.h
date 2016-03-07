@@ -7,11 +7,14 @@
 
 using namespace std;
 
+// Expansion class, will be used to expand variables based on expansion rules
+// inside of expand function.
+
 class Expansion {
   private:
     vector<string>* parseData;
     Analyze analyzer;
   public:
-    void expand(vector<string>* givenData, int* exitFlag);	
+    void expand( vector<string>* givenData, int* exitFlag );	
 };
 #endif

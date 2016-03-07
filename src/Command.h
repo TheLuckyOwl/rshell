@@ -6,13 +6,15 @@
 
 using namespace std;
 
+//Command class, will be used to call execvp and by extension commands.
+
 class Command {
   private:
-    string commandString;
+  string commandString;
 	string argumentString;
 
-	int forkFunction(char** commandArray);
+	int forkFunction( char** commandArray );
   public:
-    int callCommand(vector<string> givenVector); 
+    int callCommand( vector<string> givenVector ); 
 };
 #endif

@@ -4,11 +4,10 @@
 #include <iostream>
 #include <string>
 #include "Parse.h"
-//#include "Expansion.h"
-//#include "Analyze.h"
-//#include "Command.h"
 
 using namespace std;
+
+//RShell Class, will be used to take input from the terminal.
 
 class RShell {
   private:
@@ -19,7 +18,7 @@ class RShell {
     void parseString();
   public:
     void inputLoop();
-    void outputString(string givenString);
+    void outputString( string givenString );
     void setExit();
     string readCommandLine();
 };

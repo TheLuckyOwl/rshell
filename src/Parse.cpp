@@ -3,9 +3,10 @@
 
 using namespace std;
 
-int checkIgnores( unsigned int givenIndex, vector<unsigned int> givenIgnore ){
- for(unsigned int paranthesesChecker = 0; paranthesesChecker < givenIgnore.size(); paranthesesChecker++){
-    if(givenIndex == givenIgnore[paranthesesChecker]){
+//Check the given vector for the givenIndex.
+int checkIgnores( unsigned int givenIndex, vector<unsigned int> givenIgnore ) {
+ for (unsigned int paranthesesChecker = 0; paranthesesChecker < givenIgnore.size(); paranthesesChecker++) {
+    if (givenIndex == givenIgnore[paranthesesChecker]) {
       return 0;    
     }
  }
@@ -13,11 +14,9 @@ int checkIgnores( unsigned int givenIndex, vector<unsigned int> givenIgnore ){
  return 1;
 }
 
-int Parse::errorCheckCharacters(string* commandLine){
+//Call this function to check the passed string for character errors.
+int Parse::errorCheckCharacters( string* commandLine ) {
   int errorFlag = 0;
-  //unsigned int doubleQuoteChecked = 0;
-  //unsigned int singleQuoteChecked = 0;
-  //unsigned int paranthesesChecked = 0;
   
   vector<unsigned int> ignoreDoubleQuote;
   vector<unsigned int> ignoreSingleQuote;
@@ -29,65 +28,23 @@ int Parse::errorCheckCharacters(string* commandLine){
   int checkDoubleQuote;
   int checkBrackets;
 
-  for (unsigned int i = 0; i < commandLine->size(); i++){
+  for (unsigned int i = 0; i < commandLine->size(); i++) {
     
-  if (commandLine->at(i) == '#'){
+  if (commandLine->at(i) == '#') {
     break;
   }
-/*
-    if (commandLine->at(i) == '"'&&i > doubleQuoteChecked){
-      if (i != commandLine->size() - 1){
-  
-        for (unsigned int j = i + 1; j < commandLine->size(); j++){
-          if (commandLine->at(j) == '"'){
-            doubleQuoteChecked = j;
-           break;
-          }else if ( j == commandLine->size() - 1 ){
-           cout << "Error: missing an additional quotation mark \"." << endl;
-           errorFlag = 1;
-         }
-       }
 
-      }else {
-
-        cout << "Error: missing an additional quotation mark \"." << endl;
-        errorFlag = 1;
-      }
-    }
-
-    if (commandLine->at(i) == '\''&&i > singleQuoteChecked){
-    if (i != commandLine->size() - 1){
-
-      for(unsigned int j = i + 1; j < commandLine->size(); j++){
-        if (commandLine->at(j) == '\''){
-        singleQuoteChecked = j;
-        break;
-      }else if ( j == commandLine->size() - 1 ){
-        cout << "Error: missing an additional quotation mark \'." << endl;
-        errorFlag = 1;
-      return errorFlag;
-      }
-      }
-
-    }else {
-
-      cout << "Error: missing an additional quotation mark \'." << endl;
-    errorFlag = 1;
-    return errorFlag;
-    }
-    }
-*/
-    if (commandLine->at(i) == '"'&&checkIgnores(i, ignoreDoubleQuote)){  //Checking for Double Quote Pairs.
-      if (i != commandLine->size() - 1){
-        for (unsigned int j = i + 1; j < commandLine->size(); j++){
-          if (commandLine->at(j) == '"'){
+    if (commandLine->at(i) == '"'&&checkIgnores(i, ignoreDoubleQuote)) {  //Checking for Double Quote Pairs.
+      if (i != commandLine->size() - 1) {
+        for (unsigned int j = i + 1; j < commandLine->size(); j++) {
+          if (commandLine->at(j) == '"') {
             checkDoubleQuote = checkIgnores(j, ignoreDoubleQuote);
-            if(checkDoubleQuote){           //If we find a double quote that isn't ignored.
+            if ( checkDoubleQuote ) {           //If we find a double quote that isn't ignored.
               ignoreDoubleQuote.push_back(j);
               break; 
             }
           }
-          if ( j == commandLine->size() - 1 ){
+          if ( j == commandLine->size() - 1 ) {
            cout << "Error: missing a double quotation mark \"." << endl;
            errorFlag = 1;
           }
@@ -95,9 +52,9 @@ int Parse::errorCheckCharacters(string* commandLine){
 
        }
 
-     }else {
+     } else {
         checkDoubleQuote = checkIgnores(i, ignoreDoubleQuote);
-        if(checkDoubleQuote){
+        if (checkDoubleQuote) {
           cout << "Error: missing a double quotation mark \"." << endl;
           errorFlag = 1;
         }
@@ -106,17 +63,17 @@ int Parse::errorCheckCharacters(string* commandLine){
    }
 
 
-    if (commandLine->at(i) == '\''&&checkIgnores(i, ignoreSingleQuote)){  //Checking for Single Quote Pairs.
-      if (i != commandLine->size() - 1){
-        for (unsigned int j = i + 1; j < commandLine->size(); j++){
-          if (commandLine->at(j) == '\''){
+    if (commandLine->at(i) == '\''&&checkIgnores(i, ignoreSingleQuote)) {  //Checking for Single Quote Pairs.
+      if (i != commandLine->size() - 1) {
+        for (unsigned int j = i + 1; j < commandLine->size(); j++) {
+          if (commandLine->at(j) == '\'') {
             checkSingleQuote = checkIgnores(j, ignoreSingleQuote);
-            if(checkSingleQuote){           //If we find a single quote that isn't ignored.
+            if ( checkSingleQuote ) {           //If we find a single quote that isn't ignored.
               ignoreSingleQuote.push_back(j);
               break; 
             }
           }
-          if ( j == commandLine->size() - 1 ){
+          if ( j == commandLine->size() - 1 ) {
            cout << "Error: missing a single quotation mark \'." << endl;
            errorFlag = 1;
           }
@@ -124,26 +81,26 @@ int Parse::errorCheckCharacters(string* commandLine){
 
        }
 
-      }else {
+      } else {
         checkSingleQuote = checkIgnores(i, ignoreSingleQuote);
-        if(checkSingleQuote){
+        if ( checkSingleQuote ) {
           cout << "Error: missing a single quotation mark \'." << endl;
           errorFlag = 1;
         }
       }
     }
 
-    if (commandLine->at(i) == '('){  //Checking for Parantheses Pairs.
-      if (i != commandLine->size() - 1){
-        for (unsigned int j = i + 1; j < commandLine->size(); j++){
-          if (commandLine->at(j) == ')'){
+    if (commandLine->at(i) == '(') {  //Checking for Parantheses Pairs.
+      if (i != commandLine->size() - 1) {
+        for ( unsigned int j = i + 1; j < commandLine->size(); j++ ) {
+          if ( commandLine->at(j) == ')' ) {
             checkParantheses = checkIgnores(j, ignoreParantheses);
-            if(checkParantheses){           //If we find a Parantheses that isn't ignored.
+            if ( checkParantheses ) {           //If we find a Parantheses that isn't ignored.
               ignoreParantheses.push_back(j);
               break; 
             }
           }
-          if ( j == commandLine->size() - 1 ){
+          if ( j == commandLine->size() - 1 ) {
            cout << "Error: missing a closing parantheses )." << endl;
            errorFlag = 1;
           }
@@ -151,32 +108,32 @@ int Parse::errorCheckCharacters(string* commandLine){
 
        }
 
-      }else {
+      } else {
 
         cout << "Error: missing a closing parantheses )." << endl;
         errorFlag = 1;
       }
     }
 
-    if(commandLine->at(i) == ')'){  //Checking for lone closing Paranthese.
+    if ( commandLine->at(i) == ')' ) {  //Checking for lone closing Paranthese.
       checkParantheses = checkIgnores(i, ignoreParantheses);
-      if(checkParantheses){
+      if ( checkParantheses ) {
         errorFlag = 1;
         cout << "Error: missing a opening parantheses [." << endl;
       }
     }
 
-    if (commandLine->at(i) == '['){  //Checking for Bracket Pairs.
-      if (i != commandLine->size() - 1){
-        for (unsigned int j = i + 1; j < commandLine->size(); j++){
-          if (commandLine->at(j) == ']'){
+    if (commandLine->at(i) == '[') {  //Checking for Bracket Pairs.
+      if (i != commandLine->size() - 1) {
+        for (unsigned int j = i + 1; j < commandLine->size(); j++){ 
+          if (commandLine->at(j) == ']') {
             checkBrackets = checkIgnores(j, ignoreBrackets);
-            if(checkBrackets){           //If we find a Bracket that isn't ignored.
+            if ( checkBrackets ) {           //If we find a Bracket that isn't ignored.
               ignoreBrackets.push_back(j);
               break; 
             }
           }
-          if ( j == commandLine->size() - 1 ){
+          if ( j == commandLine->size() - 1 ) {
            cout << "Error: missing a closing bracket ]." << endl;
            errorFlag = 1;
           }
@@ -184,23 +141,23 @@ int Parse::errorCheckCharacters(string* commandLine){
 
        }
 
-      }else {
+      } else {
 
         cout << "Error: missing a closing bracket ]." << endl;
         errorFlag = 1;
       }
     }
 
-    if(commandLine->at(i) == ']'){  //Checking for lone closing Bracket.
+    if (commandLine->at(i) == ']') {  //Checking for lone closing Bracket.
       checkBrackets = checkIgnores(i, ignoreBrackets);
-      if(checkBrackets){
+      if (checkBrackets) {
         errorFlag = 1;
         cout << "Error: missing a opening bracket [." << endl;
       }
     } 
 
-    if(commandLine->at(i) == '&'){  //Checking for lone &.
-      if(i == commandLine->size() - 1){
+    if (commandLine->at(i) == '&') {  //Checking for lone &.
+      if (i == commandLine->size() - 1) {
         cout << "Error: unexpected token \"&\"" << endl;
         errorFlag = 1;
         return errorFlag;
@@ -216,16 +173,16 @@ int Parse::errorCheckCharacters(string* commandLine){
       }
     }
 
-    if(commandLine->at(i) == '|'){  //Checking for lone |.
-      if(i == commandLine->size() - 1){
+    if (commandLine->at(i) == '|') {  //Checking for lone |.
+      if (i == commandLine->size() - 1) {
         cout << "Error: unexpected token \"|\"" << endl;
         errorFlag = 1;
         return errorFlag;
-      }else {
+      } else {
         if (commandLine->at(i+1) == '|') {
           i++;
           continue;
-        }else {
+        } else {
           cout << "Error: unexpected token \"|\"" << endl;
           errorFlag = 1;
           return errorFlag;
@@ -234,51 +191,52 @@ int Parse::errorCheckCharacters(string* commandLine){
     }
 
   } 
-    //if (i != currentPos) etc. if its a " loop until you find another if you do reset i to old position,
-    //if you reach end of string set flag.
-    //if its a & or | check if its neighbor is a & if it is, check if theres another & next to that, if not
+  //if (i != currentPos) etc. if its a " loop until you find another if you do reset i to old position,
+  //if you reach end of string set flag.
+  //if its a & or | check if its neighbor is a & if it is, check if theres another & next to that, if not
   //then its good skip to the next area. Making sure to jump over the other &. if you fail any of the 
   //checks set the flag since you have one & or more than two.
   return errorFlag;
 }
 
-int Parse::errorCheckConnectors(vector<string> parseData){
+//Call this function to check for errors in connector placement.
+int Parse::errorCheckConnectors( vector<string> parseData ) {
   int errorFlag = 0;
 
-  for ( unsigned int i = 0; i < parseData.size(); i++ ){
-    if ( parseData[i] == "||" || parseData[i] == "&&" || parseData[i] == ";" ){
-    if (i == parseData.size() - 1 || i == 0 ){
+  for ( unsigned int i = 0; i < parseData.size(); i++ ) {
+    if ( parseData[i] == "||" || parseData[i] == "&&" || parseData[i] == ";" ) {
+    if ( i == parseData.size() - 1 || i == 0 ) {
         
         errorFlag = 1;
 
-    if ( parseData[i] == "&&" ){
+    if ( parseData[i] == "&&" ) { 
       cout << "Error: unexpected token \"&&\"." << endl;
     }
 
-        if ( parseData[i] == "||" ){
+        if ( parseData[i] == "||" ){ 
       cout << "Error: unexpected token \"||\"." << endl;
         }
 
-    if ( parseData[i] == ";" ){
+    if ( parseData[i] == ";" ) {
       cout << "Error: unexpected token \";\"." << endl;
     }
         
         return errorFlag;
 
     } else {
-        if ( parseData[i + 1] == "||" || parseData[i + 1] == "&&" || parseData[i + 1] == ";" ){
+        if ( parseData[i + 1] == "||" || parseData[i + 1] == "&&" || parseData[i + 1] == ";" ) {
          
       errorFlag = 1;
 
-      if ( parseData[i+1] == "&&" ){
+      if ( parseData[i+1] == "&&" ) {
         cout << "Error: unexpected token \"&&\"." << endl;
       }
 
-          if ( parseData[i+1] == "||" ){
+          if ( parseData[i+1] == "||" ) {
         cout << "Error: unexpected token \"||\"." << endl;
           }
 
-      if ( parseData[i+1] == ";" ){
+      if ( parseData[i+1] == ";" ) {
         cout << "Error: unexpected token \";\"." << endl;
       }
 
@@ -294,7 +252,11 @@ int Parse::errorCheckConnectors(vector<string> parseData){
 return errorFlag;
 }
 
-void  Parse::stringSplitter(string commandLine, int* exitFlag){
+//This function will be called to split the string and parse it into a vector of
+//strings made of commands, connectors, parantheses, etc. It will also remove
+//double quotations and single quotations and pass their internals
+//appropriately.
+void  Parse::stringSplitter( string commandLine, int* exitFlag ) {
   string tempString;
   string connectorString;
   parseData.clear();
@@ -305,56 +267,28 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\t'), commandLine.end());
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\n'), commandLine.end());
 
-  if ( errorCheckCharacters( &commandLine ) ){
+  if ( errorCheckCharacters( &commandLine ) ) {
     return;
   }
 
-  for (unsigned int i = 0; i < commandLine.size(); i++){
+  for (unsigned int i = 0; i < commandLine.size(); i++) {
     unsigned int currentPos = i;
     unsigned int outer = i;
-    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&commandLine[i] != '('&&commandLine[i] != ')'&&commandLine[i] != '['&&commandLine[i] != ']'&&i < commandLine.size()){
+    while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&commandLine[i] != '('&&commandLine[i] != ')'&&commandLine[i] != '['&&commandLine[i] != ']'&&i < commandLine.size()) {
       
-      //OLD QUOTATION CLIPPING METHOD
-      /*if ( commandLine[i] == '"'){
-        //if you are able to find another " cut out the first " and second ", if you can't output an error. 
-        for(unsigned int k=i+1; k < commandLine.size();k++){
-          if( commandLine[k] == '"' ){
-            tempString = commandLine.substr(i + 1, k - i - 1);
-            parseData.push_back(tempString);
-            currentPos = k + 1;
-            i = k;
-            k = commandLine.size();
-          }
-        }
-      }
-    
-      if ( commandLine[i] == '\''){
-        //if you are able to find another ' cut out the first ' and second ', if you can't output an error. 
-        for(unsigned int k=i+1; k < commandLine.size();k++){
-          if( commandLine[k] == '\'' ){
-            tempString = commandLine.substr(i + 1, k - i - 1);
-            parseData.push_back(tempString);
-            currentPos = k + 1;
-            i = k;
-            k = commandLine.size();
-          }
-        }
-      }*/
-
-      //NEW CLIPPING METHOD
       outer = i;
-      if ( commandLine[i] == '"'){
-        for ( unsigned int k=i+1; k < commandLine.size(); k++){
-          if( commandLine[k] == '"'){
+      if ( commandLine[i] == '"') {   //If double parantheses is detected.
+        for ( unsigned int k=i+1; k < commandLine.size(); k++ ) {
+          if ( commandLine[k] == '"') {
             outer = k;
           }
 
-          if( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ){
+          if ( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ) {
             k = commandLine.size();
           }
         }
 
-        if (outer != i){
+        if (outer != i) {   //If outer is not equal to i.
           tempString = commandLine.substr(i + 1, outer - i - 1);
           tempString.erase(remove(tempString.begin(), tempString.end(), '"'), tempString.end());
           parseData.push_back(tempString);
@@ -364,18 +298,18 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
       }
 
       outer = i;
-      if ( commandLine[i] == '\''){
+      if ( commandLine[i] == '\'') {  //If single quote is detected.
         for ( unsigned int k=i+1; k < commandLine.size(); k++){
-          if( commandLine[k] == '\''){
+          if ( commandLine[k] == '\'') {
             outer = k;
           }
 
-          if( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ){
+          if ( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ) {
             k = commandLine.size();
           }
         }
 
-        if (outer != i){
+        if (outer != i) {     //If outer is not equal to i.
           tempString = commandLine.substr(i + 1, outer - i - 1);
           tempString.erase(remove(tempString.begin(), tempString.end(), '\''), tempString.end());
           parseData.push_back(tempString);
@@ -394,86 +328,86 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
    *it will check the next to last character, if they match then they will be added
    *to the parseData vector.
    */
-    if (i != currentPos){
+    if (i != currentPos){   //If i is not equal to currentPos.
       writingWords = 1;
       tempString = commandLine.substr(currentPos, i - currentPos);
       parseData.push_back(tempString);
       
-      if(writingWords&&beforeParantheses){      //BEFORE
+      if(writingWords&&beforeParantheses){  //If writing words before a paranthese and after a connector.
         cout << "Error: Unexpected token before Parantheses." << endl;
         return;
       }
 
-      if(writingWords&&afterParantheses){
+      if(writingWords&&afterParantheses){   //If writing words after a paranthese and before a connector.
         cout << "Error: Unexpected token after Parantheses." << endl;
         return;
       }
 
-      if(beforeParantheses){    //BEFORE
+      if(beforeParantheses){        //Reset beforeParantheses if we write words and get no error.
         beforeParantheses = 0;
       }
 
-      if (commandLine[i] == ';'){
+      if (commandLine[i] == ';'){   //If ; is detected.
         writingWords = 0;
         afterParantheses = 0;
         parseData.push_back(";");
       }
 
-      if(commandLine[i] == '#'){
+      if(commandLine[i] == '#'){    //If pound sign is detected skip because it's a comment.
         afterParantheses = 0;
         break;
       }
 
-      if (commandLine[i] == '('){
-        beforeParantheses = writingWords;            //BEFORE
+      if (commandLine[i] == '('){   //If opening parantheses is detected.
+        beforeParantheses = writingWords;
         parseData.push_back("(");
       }
 
-      if (commandLine[i] == ')'){
+      if (commandLine[i] == ')'){   //If closing parantheses is detected.
         beforeParantheses = 0;
         afterParantheses = 1;
         parseData.push_back(")");
       }
 
-      if (commandLine[i] == '['){
+      if (commandLine[i] == '['){   //If opening square bracket is detected.
         parseData.push_back("[");
       }
 
-      if (commandLine[i] == ']'){
+      if (commandLine[i] == ']'){   //If closing square bracket is detected.
         parseData.push_back("]");
       }
 
     }else {
 
-      if (commandLine[i] == ';') {
+      if (commandLine[i] == ';') {   //If ; is detected.
         afterParantheses = 0;
         writingWords = 0;
         parseData.push_back(";");
       }
     
-      if (commandLine[i] == '#') {
+      if (commandLine[i] == '#') {  //If pound sign is detected break because it's a comment.
         break;
       }
 
-      if (commandLine[i] == '('){
-        beforeParantheses = writingWords;   //BEFORE
+      if (commandLine[i] == '('){   //If opening parantheses detected.
+        beforeParantheses = writingWords;
         parseData.push_back("(");
       }
 
-      if (commandLine[i] == ')'){
-        afterParantheses = 1; //ADDED
+      if (commandLine[i] == ')'){   //If closing parantheses detected.
+        afterParantheses = 1;
         parseData.push_back(")");
       }
 
-      if (commandLine[i] == '['){
+      if (commandLine[i] == '['){   //If opening square bracket detected.
         parseData.push_back("[");
       }
 
-      if (commandLine[i] == ']'){
+      if (commandLine[i] == ']'){   //If closing square bracket detected.
         parseData.push_back("]");
       }
 
-      if (commandLine[i] == '&'&&i != 0) {
+      if (commandLine[i] == '&'&&i != 0) {  //If & is detected.
         if (commandLine[i - 1] == '&'){
           writingWords = 0;
           afterParantheses = 0;
@@ -481,7 +415,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
         }
       }
 
-      if (commandLine[i] == '|'&&i != 0){
+      if (commandLine[i] == '|'&&i != 0){   //If | is detected.
         if (commandLine[i - 1] == '|'){
           writingWords = 0;
           afterParantheses = 0;
@@ -496,7 +430,7 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 //i.e. if it has a connector hanging in the beginning or end or double connectors next to
 //each other.
 
-  if ( errorCheckConnectors(parseData) ){
+  if ( errorCheckConnectors(parseData) ) {
     return;
   }
 
@@ -507,5 +441,5 @@ void  Parse::stringSplitter(string commandLine, int* exitFlag){
 //    cout << parseData[erw] << endl;
 //  }
 
-  expander.expand(&parseData, exitFlag);  //Pass Data to Expansion object expander.
+  expander.expand( &parseData, exitFlag );  //Pass Data to Expansion object expander.
 }

@@ -3,7 +3,7 @@
 #include "RShell.h"
 using namespace std;
 
-int main(){
+int main() {
 	//This creates an rshell object that will then take objects from
 	//the command line to run.
 	RShell rshell;
