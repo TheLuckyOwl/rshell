@@ -1,7 +1,30 @@
 # rshell
 
-This project is a terminal ran project. It takes input from the users and then executes command with passed arguments just like terminal would. It also takes in the host information and current user to display both values on the screen. Some of our known bugs that we have come across are:
+This project is a terminal shell application. It takes input from the user and executes commands appropriately depending on the present operators and connectors. So far we've implemented connectors, commands, built-ins, and precedence operators. To run the program follow the steps below:
 
---If a connector is present in quotation marks, the program will read it instead of passing it as a argument.(For example in an echo call)
--Quotation marks aren't removed when passing an argument to echo.
+---------------------------------------------------------------------------------------------------------------------------
 
+First, clone the project by using git clone:
+
+git clone https://github.com/TheLuckyOwl/rshell.git
+
+Next, move into the directory:
+
+cd rshell
+
+Checkout the most recent release, which in this case is hw3:
+git checkout hw3
+
+Make the program:
+
+make
+
+Finally, run the executable inside the bin folder:
+
+bin/rshell
+
+---------------------------------------------------------------------------------------------------------------------------
+
+A comprehensive list of known bugs will be listed below:
+
+-When running echo in a shell script the program will return that there is a unexpected token coming before or after the parantheses.
