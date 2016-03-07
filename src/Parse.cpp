@@ -263,6 +263,7 @@ void  Parse::stringSplitter( string commandLine, int* exitFlag ) {
   unsigned int writingWords = 0;
   unsigned int afterParantheses = 0;
   unsigned int beforeParantheses = 0;
+  unsigned int evenOdd = 0;
 
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\t'), commandLine.end());
   commandLine.erase(remove(commandLine.begin(), commandLine.end(), '\n'), commandLine.end());
@@ -277,13 +278,15 @@ void  Parse::stringSplitter( string commandLine, int* exitFlag ) {
     while (commandLine[i] != ' '&&commandLine[i] != ';'&&commandLine[i] != '&'&&commandLine[i] != '|'&&commandLine[i] != '#'&&commandLine[i] != '('&&commandLine[i] != ')'&&commandLine[i] != '['&&commandLine[i] != ']'&&i < commandLine.size()) {
       
       outer = i;
+      evenOdd = 0;
       if ( commandLine[i] == '"') {   //If double parantheses is detected.
         for ( unsigned int k=i+1; k < commandLine.size(); k++ ) {
           if ( commandLine[k] == '"') {
             outer = k;
+            evenOdd++;
           }
 
-          if ( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ) {
+          if ( (commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&')&& evenOdd%2 ) {
             k = commandLine.size();
           }
         }
@@ -296,15 +299,17 @@ void  Parse::stringSplitter( string commandLine, int* exitFlag ) {
           currentPos = outer + 1;
         }
       }
-
+      
+      evenOdd = 0;
       outer = i;
       if ( commandLine[i] == '\'') {  //If single quote is detected.
         for ( unsigned int k=i+1; k < commandLine.size(); k++){
           if ( commandLine[k] == '\'') {
             outer = k;
+            evenOdd++;
           }
 
-          if ( commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&' ) {
+          if ( (commandLine[k] == ';' || commandLine[k] == '|' || commandLine[k] == '&')&& evenOdd%2 ) {
             k = commandLine.size();
           }
         }
